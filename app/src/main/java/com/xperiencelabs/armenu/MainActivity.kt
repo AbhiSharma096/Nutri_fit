@@ -107,6 +107,7 @@ fun Menu(modifier: Modifier, onClick: (String) -> Unit) {
                   backgroundColor = Cream,
             ) {
                   Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Spacer(modifier=Modifier.height(12.dp))
                         Row(
                               modifier = Modifier.padding(8.dp),
                               horizontalArrangement = Arrangement.SpaceAround,
@@ -162,7 +163,7 @@ fun Menu(modifier: Modifier, onClick: (String) -> Unit) {
                               colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                               border = BorderStroke(1.dp, color = LightBrown)
                         ) {
-                              Text("Pick Image",modifier=Modifier.padding(16.dp))
+                              Text("Have it!",modifier=Modifier.padding(16.dp))
                         }
 
                   }

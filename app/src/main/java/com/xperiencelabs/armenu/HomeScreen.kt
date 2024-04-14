@@ -78,12 +78,12 @@ fun Home_Screen() {
                                     .padding(12.dp)
                                     .alpha(0.8f)) {
                               Column {
-                                    CardOption("AR Screen",R.drawable.ar) {
+                                    CardOption("Visualise Menu",R.drawable.ar) {
                                           val intent = Intent(context, MainActivity::class.java)
                                           context.startActivity(intent)
                                     }
                                     Spacer(modifier = Modifier.height(16.dp))
-                                    CardOption("ML Screen",R.drawable.chatbot) {
+                                    CardOption("Food Scanner",R.drawable.chatbot) {
                                           val intent = Intent(context, MLPredictorScreen::class.java)
                                           context.startActivity(intent)
                                           // Start ML screen activity or do whatever you want

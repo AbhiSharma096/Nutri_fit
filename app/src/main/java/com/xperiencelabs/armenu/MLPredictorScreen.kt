@@ -1,11 +1,11 @@
 package com.xperiencelabs.armenu
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import android.graphics.Bitmap
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.compose.foundation.BorderStroke
@@ -14,17 +14,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,11 +31,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.xperiencelabs.armenu.ui.theme.Brown
@@ -64,78 +59,91 @@ class MLPredictorScreen() : ComponentActivity() {
 fun UploadImageScreen() {
       var context = LocalContext.current
       var scroll = rememberScrollState(0)
-
       var name by remember { mutableStateOf("") }
-      var bitmap = ContextCompat.getDrawable(context, R.drawable.background)?.toBitmap()
-      var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(bitmap) }
+
+      var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
       var outputText by remember { mutableStateOf("") }
 
-
-      Column(
-            modifier = Modifier
-                  .fillMaxSize()
-                  .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-            if (selectedImageBitmap != bitmap) {
-                  Image(
-                        //bitmap = selectedImageBitmap!!.asImageBitmap(),
-                        bitmap = selectedImageBitmap!!.asImageBitmap(),
-                        contentDescription = "Image box",
-                        modifier = Modifier
-                              .size(350.dp)
-                              .clip(RoundedCornerShape(12.dp)),
-                        contentScale = ContentScale.Crop
-                  )
-                  Spacer(modifier = Modifier.height(16.dp))
-
-                  OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text(" Your Name") },
-                        modifier = Modifier
-                              .fillMaxWidth()
-                              .padding(vertical = 8.dp)
-
-                        , colors = TextFieldDefaults.outlinedTextFieldColors(
-                              focusedBorderColor = DarkBrown,
-                              unfocusedBorderColor = Brown,
-                              placeholderColor = Brown
-                  ))
-                  UploadButton(selectedImageBitmap!!, onUploadComplete = { output ->
-                        outputText = output
-                  })
-
-                  Spacer(modifier = Modifier.height(16.dp))
-                  Card(
-                        modifier = Modifier
-                              .fillMaxWidth()
-                              .verticalScroll(scroll)
-                              .padding(16.dp),
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(8.dp),
-                        backgroundColor = Color.White
-                  ) {
-                        Text(
-                              text = outputText,
-                              fontSize = 16.sp,
-                              modifier = Modifier.padding(16.dp) // Adjust padding inside the card
-                        )
-                  }
-
-            } else {Image(
-                  //bitmap = selectedImageBitmap!!.asImageBitmap(),
-                  bitmap = selectedImageBitmap!!.asImageBitmap(),
-                  contentDescription = "Image box",
-                  modifier = Modifier
-                        .size(350.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                  contentScale = ContentScale.Crop
+      Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                  painterResource(id = R.drawable.background),
+                  contentDescription = null,
+                  modifier = Modifier.fillMaxSize(),
+                  contentScale = ContentScale.FillBounds
             )
-                  PickImageButton(onImagePicked = { bitmap ->
-                        selectedImageBitmap = bitmap
-                  })
+
+
+            Column(
+                  modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                  verticalArrangement = Arrangement.Center,
+                  horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                  if (selectedImageBitmap != null) {
+                        Spacer(modifier=Modifier.height(25.dp) )
+                        Image(
+                              //bitmap = selectedImageBitmap!!.asImageBitmap(),
+                              bitmap = selectedImageBitmap!!.asImageBitmap(),
+                              contentDescription = "Image box",
+                              modifier = Modifier
+                                    .size(350.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .border(2.dp,Color.White,),
+                              contentScale = ContentScale.Crop
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        OutlinedTextField(
+                              value = name,
+                              onValueChange = { name = it },
+                              label = { Text("Your Health issue") },
+                              modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                              colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    focusedBorderColor = DarkBrown,
+                                    unfocusedBorderColor = Brown,
+                                    placeholderColor = Brown
+                              )
+                        )
+                        UploadButton(selectedImageBitmap!!, onUploadComplete = { output ->
+                              outputText = output
+                        },name)
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Card(
+                              modifier = Modifier
+                                    .fillMaxWidth()
+                                    .verticalScroll(scroll)
+                                    .padding(16.dp),
+                              elevation = 4.dp,
+                              shape = RoundedCornerShape(8.dp),
+                              backgroundColor = Color.White
+                        ) {
+                              Text(
+                                    text = outputText,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.padding(16.dp) // Adjust padding inside the card
+                              )
+                        }
+
+                  } else {
+                        Image(
+                              //bitmap = selectedImageBitmap!!.asImageBitmap(),
+                              painter = painterResource(id = R.drawable.how_to_use_), // Replace "your_gif" with the name of your GIF file
+
+                              contentDescription = "Image box",
+                              modifier = Modifier
+                                    .size(350.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
+                              contentScale = ContentScale.Crop
+                        )
+
+                        PickImageButton(onImagePicked = { bitmap ->
+                              selectedImageBitmap = bitmap
+                        })
+                  }
             }
       }
 }
@@ -168,7 +176,7 @@ fun PickImageButton(onImagePicked: (Bitmap) -> Unit) {
 }
 
 @Composable
-fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit) {
+fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit,name:String) {
       var isLoading by remember {
             mutableStateOf(false)
       }
@@ -177,7 +185,7 @@ fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit) {
                   isLoading = true
                   // Launch a coroutine to perform the upload operation
                   GlobalScope.launch(Dispatchers.IO) {
-                        val output = uploadImage(bitmap)
+                        val output = uploadImage(bitmap,name)
                         withContext(Dispatchers.Main) {
                               isLoading =
                                     false // Set loading state to false when upload is complete
@@ -203,7 +211,7 @@ fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit) {
 }
 
 
-private suspend fun uploadImage(bitmap: Bitmap): String {
+private suspend fun uploadImage(bitmap: Bitmap,name: String): String {
       println("Uploading image...")
       val generativeModel = GenerativeModel(
             modelName = "gemini-pro-vision",
@@ -217,12 +225,20 @@ private suspend fun uploadImage(bitmap: Bitmap): String {
             text("")
 
             text(
-                  "You are an expert in nutritionist where you need to see the food items from the image " +
-                      "and calculate the total calories, fat content and protien content , carbohydrates content, " +
-                      "vitamin content, also provide the details of every food items with calories intake" +
-                      "  is below format" +
-                      "               1. Item 1 - no of calories, fat content, protien content, carbohydrates content, vitamin content, " +
-                      "               2. Item 2 - no of calories, fat content, protien content, carbohydrates content, vitamin content, "
+                 "You are an expert in nutritionist where you need to see the food items from the image,first provide the name of the food in given format\n" +
+                     "           \"The food in the image is (Food-Name)\"\n" +
+                     "\n" +
+                     "and then provide very very short and crisp respone, don't tell how it is made and any other details of the food, tell the details of the\n" +
+                     "      allergy causing ingredients, mention at most 3 main ingredients if present, in the format given below under the heading Allergy information:\n" +
+                     "               \n" +
+                     "               1. allergy associated with (Ingredient-1) is (one word description)\n" +
+                     "               2. allergy associated with (Ingredient-2) is (one word description)\n" +
+                     "               3. allergy associated with (Ingredient-3) is (one word description)\n" +
+                     "                \n" +
+                     "               and  display the minimum and maximum number of Nutritional content of the detected food and Display it under the heading Nutritional information:\n" +
+                     "               \n" +
+                     "               display like this contents like calories, fat content, protien content, carbohydrates content, vitamin content and sugar content in bullets points."
+                  +"Also suggest the precaution for a person with this health issue = ${name}"
             )
       }
 
