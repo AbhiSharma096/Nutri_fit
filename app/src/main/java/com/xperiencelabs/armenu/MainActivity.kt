@@ -69,7 +69,6 @@ class MainActivity : ComponentActivity() {
       }
 }
 
-
 @Composable
 fun Menu(modifier: Modifier, onClick: (String) -> Unit) {
       var currentIndex by remember {

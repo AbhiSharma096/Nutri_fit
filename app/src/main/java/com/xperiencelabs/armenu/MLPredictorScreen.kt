@@ -60,6 +60,7 @@ fun UploadImageScreen() {
       var context = LocalContext.current
       var scroll = rememberScrollState(0)
       var name by remember { mutableStateOf("") }
+      var description by remember { mutableStateOf("") }
 
       var selectedImageBitmap by remember { mutableStateOf<Bitmap?>(null) }
       var outputText by remember { mutableStateOf("") }
@@ -107,9 +108,22 @@ fun UploadImageScreen() {
                                     placeholderColor = Brown
                               )
                         )
+                        OutlinedTextField(
+                              value = description,
+                              onValueChange = { description = it },
+                              label = { Text("Enter any additional information") },
+                              modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+                              colors = TextFieldDefaults.outlinedTextFieldColors(
+                                    focusedBorderColor = DarkBrown,
+                                    unfocusedBorderColor = Brown,
+                                    placeholderColor = Brown
+                              )
+                        )
                         UploadButton(selectedImageBitmap!!, onUploadComplete = { output ->
                               outputText = output
-                        },name)
+                        },name,description)
 
                         Spacer(modifier = Modifier.height(16.dp))
                         Card(
@@ -176,7 +190,7 @@ fun PickImageButton(onImagePicked: (Bitmap) -> Unit) {
 }
 
 @Composable
-fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit,name:String) {
+fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit,name:String, description: String) {
       var isLoading by remember {
             mutableStateOf(false)
       }
@@ -185,7 +199,7 @@ fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit,name:String)
                   isLoading = true
                   // Launch a coroutine to perform the upload operation
                   GlobalScope.launch(Dispatchers.IO) {
-                        val output = uploadImage(bitmap,name)
+                        val output = uploadImage(bitmap,name,description)
                         withContext(Dispatchers.Main) {
                               isLoading =
                                     false // Set loading state to false when upload is complete
@@ -211,11 +225,11 @@ fun UploadButton(bitmap: Bitmap, onUploadComplete: (String) -> Unit,name:String)
 }
 
 
-private suspend fun uploadImage(bitmap: Bitmap,name: String): String {
+private suspend fun uploadImage(bitmap: Bitmap,name: String, description: String): String {
       println("Uploading image...")
       val generativeModel = GenerativeModel(
             modelName = "gemini-pro-vision",
-            apiKey = "AIzaSyA4UYVM5b5L4QG0TIxJZd93CjOdK8Ki-uo"
+            apiKey = "AIzaSyDx-iWa5DukvIjFSz4PLyfIvn9_uvEcqLM"
       )
 
       val image1: Bitmap = bitmap
@@ -228,16 +242,22 @@ private suspend fun uploadImage(bitmap: Bitmap,name: String): String {
                  "You are an expert in nutritionist where you need to see the food items from the image,first provide the name of the food in given format\n" +
                      "           \"The food in the image is (Food-Name)\"\n" +
                      "\n" +
-                     "and then provide very very short and crisp respone, don't tell how it is made and any other details of the food, tell the details of the\n" +
+                     "and then provide very very short and crisp response, don't tell how it is made and any other details of the food, tell the details of the\n" +
                      "      allergy causing ingredients, mention at most 3 main ingredients if present, in the format given below under the heading Allergy information:\n" +
                      "               \n" +
+                         "Mention any allergy if associated in the additional information provided by the user that is \"${description}\" . Ignore if no additional information is provided\n"+
                      "               1. allergy associated with (Ingredient-1) is (one word description)\n" +
                      "               2. allergy associated with (Ingredient-2) is (one word description)\n" +
                      "               3. allergy associated with (Ingredient-3) is (one word description)\n" +
                      "                \n" +
-                     "               and  display the minimum and maximum number of Nutritional content of the detected food and Display it under the heading Nutritional information:\n" +
+                     "               and  display the minimum and maximum number of Nutritional content of the detected food and Display it under the heading Nutritional information :\n" +
                      "               \n" +
-                     "               display like this contents like calories, fat content, protien content, carbohydrates content, vitamin content and sugar content in bullets points."
+
+                     "               display like this contents like calories, fat content, protien content, carbohydrates content, vitamin content and sugar content in bullets points. Provide the nutritional values in per hundred grams. If it is a beverage it should be standardized to per hundred milliliters.Also provide the total amount of nutritional values. Follow the format given below\n"+
+                         "Serial Number. Nutritional Content/100g or Nutritional Content/100ml = minimum-maximum range, Total expected Nutritional content = minimum-maximum range\n"+
+                         "\n"+
+                         "Alter the content according to the additional information provided by the user. The additional information is \"${description}\". Ignore if no additional information is provided\n"+
+                         "Also provide very very short and crisp response on whether the person can consume the food or not by considering the additional information about food that is \"${description}\" and health issue = ${name}\n"
                   +"Also suggest the precaution for a person with this health issue = ${name}"
             )
       }
