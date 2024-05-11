@@ -252,7 +252,7 @@ private fun GradiendBrush(
 private fun sendOrderConfirmationSms(food:String,name: String, tableNumber: String, size: String, context: Context) {
     try {
         val smsManager = SmsManager.getDefault()
-        val phoneNumber = "9569120913"
+        val phoneNumber = "9045489926"
         val message = "Order confirmation:\n" +
                 "Name: $name\nItem: $food\nSize: $size\nTable No: $tableNumber"
         smsManager.sendTextMessage(phoneNumber, null, message, null, null)
