@@ -83,7 +83,11 @@ fun Menu(modifier: Modifier, onClick: (String) -> Unit) {
             Food("momos", R.drawable.momos),
             Food("pizza", R.drawable.pizza),
             Food("ramen", R.drawable.ramen),
-
+            Food("compressChessCake1", R.drawable.ramen),
+            Food("compressed1", R.drawable.ramen),
+            Food("Croissants", R.drawable.ramen),
+            Food("kfccompressgltf", R.drawable.ramen),
+            Food("koreanWingsCOmpress1", R.drawable.ramen)
             )
 
       fun updateIndex(offset: Int) {

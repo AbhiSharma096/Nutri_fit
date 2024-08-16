@@ -37,12 +37,25 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion '1.5.3'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.md'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.md'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE-notice.md'  // Add this line
+    }
+    buildscript {
+        ext.kotlin_version = '1.9.10'
+        // ...
     }
 }
 
@@ -58,15 +71,22 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.navigation:navigation-runtime-ktx:2.7.7'
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
     implementation 'io.github.sceneview:arsceneview:0.10.0'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("com.google.ai.client.generativeai:generativeai:0.3.0")
+    //implementation("com.squareup.okhttp3:okhttp:4.12.0 ")
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
 
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 
 
 

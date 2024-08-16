@@ -43,12 +43,34 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
 
 
 class MLPredictorScreen() : ComponentActivity() {
 
+
+
       override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
+
+            val public = null
+            val final = null
+//            public static final MediaType JSON = MediaType.get("application/json");
+//
+//            OkHttpClient client = new OkHttpClient();
+//
+//            String post(String url, String json) throws IOException {
+//                  RequestBody body = RequestBody.create(json, JSON);
+//                  val url = "https://inf-4bba18a4-67ac-4269-8c23-ea2132e2b690-no4xvrhsfq-uc.a.run.app/detect"
+//                  Request request = new Request.Builder()
+//                        .url(url)
+//                        .post(body)
+//                        .build();
+//                  try (Response response = client.newCall(request).execute()) {
+//                        return response.body().string();
+//                  }
+//                  }
             setContent {
                   UploadImageScreen()
             }
